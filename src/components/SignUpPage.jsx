@@ -12,45 +12,63 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Checkbox } from "@/components/ui/checkbox";
+import { auth } from "../config/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-const AuthPage = () => {
+const SignUpPage = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleEmailSignIn = (e) => {
+  async function handleEmailSignUp(e) {
+    // Prevent the default form submission behavior
     e.preventDefault();
+
+    // Reset any previous errors
+    setError("");
     setLoading(true);
 
-    // Simulate authentication process
-    setTimeout(() => {
-      if (!email.includes("@")) {
-        setError("Please enter a valid email address");
-        setLoading(false);
-        return;
+    try {
+      // Validate form data
+      if (!name || !email || !password || !confirmPassword) {
+        throw new Error("Please fill in all fields");
       }
 
-      if (password.length < 6) {
-        setError("Password must be at least 6 characters");
-        setLoading(false);
-        return;
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match");
       }
 
-      // Success handling would go here
+      if (!agreeTerms) {
+        throw new Error(
+          "You must agree to the Terms of Service and Privacy Policy"
+        );
+      }
+
+      // Attempt to create user
+      await createUserWithEmailAndPassword(auth, email, password);
+      console.log("Account created successfully");
+      // Handle successful sign-up (e.g., redirect to dashboard)
+    } catch (err) {
+      // Handle errors
+      console.error("Sign-up error:", err);
+      setError(err.message || "Failed to create account. Please try again.");
+    } finally {
       setLoading(false);
-      setError("");
-      console.log("Signed in with:", email);
-    }, 1000);
-  };
+    }
+  }
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignUp = () => {
     setLoading(true);
 
     // Simulate Google authentication
     setTimeout(() => {
       setLoading(false);
-      console.log("Signed in with Google");
+      console.log("Signed up with Google");
     }, 1000);
   };
 
@@ -75,18 +93,19 @@ const AuthPage = () => {
         <Card className="w-full">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
-              Welcome back
+              Create an account
             </CardTitle>
             <CardDescription className="text-center">
-              Sign in to your account to continue
+              Sign up to get started with our service
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Button
               variant="outline"
               className="w-full justify-center"
-              onClick={handleGoogleSignIn}
+              onClick={handleGoogleSignUp}
               disabled={loading}
+              type="button"
             >
               <svg
                 className="mr-2 h-4 w-4"
@@ -129,8 +148,19 @@ const AuthPage = () => {
               </Alert>
             )}
 
-            <form onSubmit={handleEmailSignIn}>
+            <form onSubmit={handleEmailSignUp}>
               <div className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
                 <div>
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -143,12 +173,7 @@ const AuthPage = () => {
                   />
                 </div>
                 <div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Password</Label>
-                    <Button variant="link" className="p-0 h-auto text-xs">
-                      Forgot password?
-                    </Button>
-                  </div>
+                  <Label htmlFor="password">Password</Label>
                   <Input
                     id="password"
                     type="password"
@@ -158,17 +183,53 @@ const AuthPage = () => {
                     required
                   />
                 </div>
+                <div>
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="terms"
+                    checked={agreeTerms}
+                    onCheckedChange={setAgreeTerms}
+                  />
+                  <Label htmlFor="terms" className="text-sm">
+                    I agree to the{" "}
+                    <Button
+                      variant="link"
+                      className="p-0 h-auto text-xs"
+                      type="button"
+                    >
+                      Terms of Service
+                    </Button>{" "}
+                    and{" "}
+                    <Button
+                      variant="link"
+                      className="p-0 h-auto text-xs"
+                      type="button"
+                    >
+                      Privacy Policy
+                    </Button>
+                  </Label>
+                </div>
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign in with Email"}
+                  {loading ? "Creating account..." : "Create account"}
                 </Button>
               </div>
             </form>
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-sm text-gray-500">
-              Don't have an account?{" "}
-              <Button variant="link" className="p-0 h-auto">
-                Sign up
+              Already have an account?{" "}
+              <Button variant="link" className="p-0 h-auto" type="button">
+                Sign in
               </Button>
             </p>
           </CardFooter>
@@ -178,4 +239,4 @@ const AuthPage = () => {
   );
 };
 
-export default AuthPage;
+export default SignUpPage;

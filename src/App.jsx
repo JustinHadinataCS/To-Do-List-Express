@@ -2,20 +2,13 @@
 import { useState } from "react";
 import Item from "./Item";
 import { Button } from "./components/ui/button";
-import AuthPage from "./components/AuthPage";
+import AuthPage from "./components/LogInPage";
+import SignUpPage from "./components/SignUpPage";
+import Simple from "./components/Simple";
 
 function App() {
-  const [items, setItems] = useState([]);
-  const [name, setName] = useState("");
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    setItems((items) => [...items, { name, id: items.length + 1 }]);
-    setName("");
-  }
-
   return (
-    <AuthPage />
+    <SignUpPage />
     // <div className="p-10">
     //   <Button className="shadow-md">Hello</Button>
     // </div>
