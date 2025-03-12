@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,56 +11,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { auth, googleProvider } from "../config/firebase";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
+import { useAuth } from "@/context/AuthContext";
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const {
+    email,
+    password,
+    error,
+    loading,
+    setEmail,
+    handleGoogleSignIn,
+    handleEmailSignIn,
+    setPassword,
+  } = useAuth();
 
-  async function handleEmailSignIn(e) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      if (!email || !password) {
-        throw new Error("Please fill in all fields");
-      }
-
-      await signInWithEmailAndPassword(auth, email, password);
-      console.log("Logged in successfully");
-    } catch (err) {
-      console.error("Logged in error:", err);
-      setError(err.message || "Failed to log in. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleGoogleSignIn() {
-    setLoading(true);
-    try {
-      setTimeout(() => {
-        setLoading(false);
-        console.log("Signed up with Google");
-      }, 1000);
-      await signInWithPopup(auth, googleProvider);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-  async function logout() {
-    try {
-      await signOut(auth);
-    } catch (err) {
-      console.error(err);
-    }
-  }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md">

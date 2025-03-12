@@ -8,6 +8,7 @@ import Simple from "./components/Simple";
 import LoginPage from "./components/LoginPage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
+import { AuthProvider } from "./context/AuthContext";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,9 @@ const router = createBrowserRouter([
 ]);
 function App() {
   return (
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
     // <div className="p-10">
     //   <Button className="shadow-md">Hello</Button>
     // </div>
