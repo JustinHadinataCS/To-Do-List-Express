@@ -29,7 +29,7 @@ function AuthProvider({ children }) {
     return () => unsubscribe(); // Properly cleanup subscription
   }, []);
 
-  async function handleEmailSignIn({ e, navigateTo }) {
+  async function handleEmailSignIn(e) {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -42,14 +42,9 @@ function AuthProvider({ children }) {
       await signInWithEmailAndPassword(auth, email, password);
       console.log("Logged in successfully");
 
-      // Reset email and password after successful login
       setEmail("");
       setPassword("");
-
-      // Navigate if function is provided
-      if (navigateTo && typeof navigateTo === "function") {
-        navigate("/todo");
-      }
+      navigate("/todo");
     } catch (err) {
       console.error("Login error:", err);
       setError(err.message || "Failed to log in. Please try again.");
@@ -58,7 +53,7 @@ function AuthProvider({ children }) {
     }
   }
 
-  async function handleGoogleSignIn({ navigateTo }) {
+  async function handleGoogleSignIn() {
     setError("");
     setLoading(true);
 
@@ -66,10 +61,7 @@ function AuthProvider({ children }) {
       await signInWithPopup(auth, googleProvider);
       console.log("Signed in with Google");
 
-      // Navigate if function is provided
-      if (navigateTo && typeof navigateTo === "function") {
-        navigate("/todo");
-      }
+      navigate("/todo");
     } catch (err) {
       console.error("Google Sign-in error:", err);
       setError(err.message || "Google sign-in failed. Please try again.");
@@ -92,8 +84,7 @@ function AuthProvider({ children }) {
       setLoading(false);
     }
   }
-  async function handleEmailSignUp({ e, confirmPassword }) {
-    e.preventDefault();
+  async function handleEmailSignUp({ confirmPassword }) {
     setError("");
     setLoading(true);
 

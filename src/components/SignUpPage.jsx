@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/context/AuthContext";
+import { Link } from "react-router-dom";
 
 const SignUpPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,6 +27,7 @@ const SignUpPage = () => {
     handleGoogleSignIn,
     handleEmailSignUp,
     setPassword,
+    logout,
   } = useAuth();
 
   return (
@@ -95,7 +97,7 @@ const SignUpPage = () => {
               </Alert>
             )}
 
-            <form onSubmit={handleEmailSignUp}>
+            <form onSubmit={handleEmailSignUp(confirmPassword)}>
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="name">Full Name</Label>
@@ -151,14 +153,18 @@ const SignUpPage = () => {
             <p className="text-sm text-gray-500 flex gap-x-1">
               Already have an account?
               <Link to="/login">
-                \{" "}
                 <Button variant="link" className="p-0 h-auto" type="button">
                   Sign in
                 </Button>
               </Link>
             </p>
             <Link to="/">
-              <Button variant="link" className="p-0 h-auto" type="button">
+              <Button
+                variant="link"
+                className="p-0 h-auto"
+                type="button"
+                onClick={logout}
+              >
                 Logout
               </Button>
             </Link>

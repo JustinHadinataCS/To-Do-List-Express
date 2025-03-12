@@ -24,6 +24,7 @@ const LoginPage = () => {
     handleGoogleSignIn,
     handleEmailSignIn,
     setPassword,
+    logout,
   } = useAuth();
 
   return (
@@ -130,7 +131,7 @@ const LoginPage = () => {
               </div>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-center">
+          <CardFooter className="flex justify-center flex-col">
             <p className="text-sm text-gray-500">
               Don't have an account?{" "}
               <Link to="/signup">
@@ -138,12 +139,17 @@ const LoginPage = () => {
                   Sign up
                 </Button>
               </Link>
-              <Link to="/">
-                <Button variant="link" className="p-0 h-auto" type="button">
-                  Logout
-                </Button>
-              </Link>
             </p>
+            <Link to="/">
+              <Button
+                variant="link"
+                className="p-0 h-auto"
+                type="button"
+                onClick={logout}
+              >
+                Logout
+              </Button>
+            </Link>
           </CardFooter>
         </Card>
       </div>
