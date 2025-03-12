@@ -11,7 +11,7 @@ Welcome to the **Firebase Todo List** project! This guide will help you set up t
 First, clone the repository to your local machine:
 
 ```sh
-git clone https://github.com/YOUR_USERNAME/Firebase-Todolist.git
+git clone https://github.com/JustinHadinataCS/Firebase-Todolist.git
 cd Firebase-Todolist
 ```
 
