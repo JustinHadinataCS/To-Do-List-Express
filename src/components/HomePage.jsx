@@ -9,15 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  ClipboardList,
-  User,
-  LogIn,
-  UserPlus,
-  Home,
-  Menu,
-  X,
-} from "lucide-react";
+import { ClipboardList, LogIn, UserPlus, Home, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const HomePage = () => {

@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash, Edit, Check, X, RefreshCw } from "lucide-react";
+import { Trash, RefreshCw } from "lucide-react";
 import Item from "./Item";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 // Main TodoList component
 function TodolistPage() {
@@ -29,6 +30,13 @@ function TodolistPage() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
+      <Link to="/">
+        {" "}
+        <Button variant="ghost" className="flex items-center text-gray-500">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Go back
+        </Button>
+      </Link>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-4">Taskmaster</h1>
         <p className="text-gray-600 mb-4">Justin Hadinata - 2702298236</p>

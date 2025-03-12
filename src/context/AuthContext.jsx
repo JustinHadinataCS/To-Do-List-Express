@@ -84,21 +84,19 @@ function AuthProvider({ children }) {
       setLoading(false);
     }
   }
-  async function handleEmailSignUp({ confirmPassword }) {
+  async function handleEmailSignUp({ name, confirmPassword }) {
     setError("");
     setLoading(true);
-
     try {
       if (!name || !email || !password || !confirmPassword) {
         throw new Error("Please fill in all fields");
       }
-
       if (password !== confirmPassword) {
         throw new Error("Passwords do not match");
       }
-
       await createUserWithEmailAndPassword(auth, email, password);
       console.log("Account created successfully");
+      navigate("/todo"); // Add this line to navigate after successful signup
     } catch (err) {
       console.error("Sign-up error:", err);
       setError(err.message || "Failed to create account. Please try again.");

@@ -34,10 +34,12 @@ const SignUpPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md">
         <div className="mb-4">
-          <Button variant="ghost" className="flex items-center text-gray-500">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Go back
-          </Button>
+          <Link to="/">
+            <Button variant="ghost" className="flex items-center text-gray-500">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Go back
+            </Button>
+          </Link>
         </div>
         <Card className="w-full">
           <CardHeader className="space-y-1">
@@ -97,7 +99,13 @@ const SignUpPage = () => {
               </Alert>
             )}
 
-            <form onSubmit={handleEmailSignUp(confirmPassword)}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleEmailSignUp({ name, confirmPassword });
+              }}
+            >
+              {" "}
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="name">Full Name</Label>
