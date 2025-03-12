@@ -12,64 +12,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { auth, googleProvider } from "../config/firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
+import { useAuth } from "@/context/AuthContext";
 
 const SignUpPage = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function handleEmailSignUp(e) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      if (!name || !email || !password || !confirmPassword) {
-        throw new Error("Please fill in all fields");
-      }
-
-      if (password !== confirmPassword) {
-        throw new Error("Passwords do not match");
-      }
-
-      await createUserWithEmailAndPassword(auth, email, password);
-      console.log("Account created successfully");
-    } catch (err) {
-      console.error("Sign-up error:", err);
-      setError(err.message || "Failed to create account. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleGoogleSignUp() {
-    setLoading(true);
-    try {
-      setTimeout(() => {
-        setLoading(false);
-        console.log("Signed up with Google");
-      }, 1000);
-      await signInWithPopup(auth, googleProvider);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-  async function logout() {
-    try {
-      await signOut(auth);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  const [name, setName] = useState("");
+  const {
+    email,
+    password,
+    error,
+    loading,
+    setEmail,
+    handleGoogleSignIn,
+    handleEmailSignUp,
+    setPassword,
+  } = useAuth();
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -93,7 +50,7 @@ const SignUpPage = () => {
             <Button
               variant="outline"
               className="w-full justify-center"
-              onClick={handleGoogleSignUp}
+              onClick={handleGoogleSignIn}
               disabled={loading}
               type="button"
             >
@@ -193,13 +150,18 @@ const SignUpPage = () => {
           <CardFooter className="flex justify-center flex-col">
             <p className="text-sm text-gray-500 flex gap-x-1">
               Already have an account?
-              <Button variant="link" className="p-0 h-auto" type="button">
-                Sign in
-              </Button>
+              <Link to="/login">
+                \{" "}
+                <Button variant="link" className="p-0 h-auto" type="button">
+                  Sign in
+                </Button>
+              </Link>
             </p>
-            <Button variant="link" className="p-0 h-auto" type="button">
-              Logout
-            </Button>
+            <Link to="/">
+              <Button variant="link" className="p-0 h-auto" type="button">
+                Logout
+              </Button>
+            </Link>
           </CardFooter>
         </Card>
       </div>

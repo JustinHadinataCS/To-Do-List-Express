@@ -1,4 +1,5 @@
 import {
+  createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -6,6 +7,8 @@ import {
 } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebase";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
@@ -15,18 +18,22 @@ function AuthProvider({ children }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(function () {
+  const navigate = useNavigate();
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
     });
 
-    return () => unsubscribe;
+    return () => unsubscribe(); // Properly cleanup subscription
   }, []);
+
   async function handleEmailSignIn({ e, navigateTo }) {
     e.preventDefault();
     setError("");
     setLoading(true);
+
     try {
       if (!email || !password) {
         throw new Error("Please fill in all fields");
@@ -34,35 +41,81 @@ function AuthProvider({ children }) {
 
       await signInWithEmailAndPassword(auth, email, password);
       console.log("Logged in successfully");
+
+      // Reset email and password after successful login
+      setEmail("");
+      setPassword("");
+
+      // Navigate if function is provided
+      if (navigateTo && typeof navigateTo === "function") {
+        navigate("/todo");
+      }
     } catch (err) {
-      console.error("Logged in error:", err);
+      console.error("Login error:", err);
       setError(err.message || "Failed to log in. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
-  async function handleGoogleSignIn() {
+  async function handleGoogleSignIn({ navigateTo }) {
+    setError("");
     setLoading(true);
+
     try {
-      setTimeout(() => {
-        setLoading(false);
-        console.log("Signed up with Google");
-      }, 1000);
       await signInWithPopup(auth, googleProvider);
+      console.log("Signed in with Google");
+
+      // Navigate if function is provided
+      if (navigateTo && typeof navigateTo === "function") {
+        navigate("/todo");
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Google Sign-in error:", err);
+      setError(err.message || "Google sign-in failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
+
   async function logout() {
+    setError("");
+    setLoading(true);
+    navigate("/");
     try {
       await signOut(auth);
+      console.log("Successfully logged out");
     } catch (err) {
-      console.error(err);
+      console.error("Logout error:", err);
+      setError(err.message || "Failed to log out. Please try again.");
     } finally {
-      console.log("Succesfully logged out");
+      setLoading(false);
     }
   }
+  async function handleEmailSignUp({ e, confirmPassword }) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      if (!name || !email || !password || !confirmPassword) {
+        throw new Error("Please fill in all fields");
+      }
+
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
+
+      await createUserWithEmailAndPassword(auth, email, password);
+      console.log("Account created successfully");
+    } catch (err) {
+      console.error("Sign-up error:", err);
+      setError(err.message || "Failed to create account. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const value = {
     user,
     loading,
@@ -70,11 +123,11 @@ function AuthProvider({ children }) {
     email,
     password,
     setEmail,
-    setLoading,
     setPassword,
     logout,
     handleEmailSignIn,
     handleGoogleSignIn,
+    handleEmailSignUp,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/context/AuthContext";
+import { Link } from "react-router-dom";
+
 const LoginPage = () => {
   const {
     email,
@@ -28,10 +30,13 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md">
         <div className="mb-4">
-          <Button variant="ghost" className="flex items-center text-gray-500">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Go back
-          </Button>
+          <Link to="/">
+            {" "}
+            <Button variant="ghost" className="flex items-center text-gray-500">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Go back
+            </Button>
+          </Link>
         </div>
         <Card className="w-full">
           <CardHeader className="space-y-1">
@@ -128,9 +133,16 @@ const LoginPage = () => {
           <CardFooter className="flex justify-center">
             <p className="text-sm text-gray-500">
               Don't have an account?{" "}
-              <Button variant="link" className="p-0 h-auto">
-                Sign up
-              </Button>
+              <Link to="/signup">
+                <Button variant="link" className="p-0 h-auto">
+                  Sign up
+                </Button>
+              </Link>
+              <Link to="/">
+                <Button variant="link" className="p-0 h-auto" type="button">
+                  Logout
+                </Button>
+              </Link>
             </p>
           </CardFooter>
         </Card>

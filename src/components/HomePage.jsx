@@ -26,7 +26,6 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
@@ -52,14 +51,6 @@ const HomePage = () => {
               >
                 <UserPlus className="mr-2 h-4 w-4" />
                 Sign Up
-              </Button>
-              <Button
-                variant="outline"
-                className="flex items-center"
-                onClick={() => navigate("/profile")}
-              >
-                <User className="mr-2 h-4 w-4" />
-                Profile
               </Button>
             </div>
             <div className="md:hidden">
@@ -93,17 +84,6 @@ const HomePage = () => {
                       <UserPlus className="mr-2 h-4 w-4" />
                       Sign Up
                     </Button>
-                    <Button
-                      variant="ghost"
-                      className="flex items-center justify-start"
-                      onClick={() => {
-                        navigate("/profile");
-                        setIsMobileMenuOpen(false);
-                      }}
-                    >
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
-                    </Button>
                   </div>
                 </SheetContent>
               </Sheet>
@@ -112,7 +92,6 @@ const HomePage = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
       <main>
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
           <div className="text-center">
@@ -126,7 +105,7 @@ const HomePage = () => {
             <div className="mt-8 flex justify-center">
               <Button
                 className="flex items-center px-6 py-6 text-lg"
-                onClick={() => navigate("/todos")}
+                onClick={() => navigate("/todo")}
               >
                 <ClipboardList className="mr-2 h-5 w-5" />
                 Get Started with Todo List
@@ -174,7 +153,6 @@ const HomePage = () => {
           </Card>
         </div>
 
-        {/* Features Section */}
         <div className="bg-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:text-center">
