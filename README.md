@@ -125,4 +125,9 @@ Still need help? Feel free to open an issue in the GitHub repository!
 
 ---
 
+Additional Resources: https://www.youtube.com/watch?v=2hR-uWjBAgw&t=1779s
+
+---
+
+
 🚀 **Happy Coding!** 🎉
