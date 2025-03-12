@@ -9,12 +9,13 @@ import LoginPage from "./components/LoginPage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
 import { AuthProvider } from "./context/AuthContext";
+import HomePage from "./components/HomePage";
 
 const router = createBrowserRouter([
   {
     element: <AppLayout />,
     errorElement: <p>Error</p>,
-    children: [{ path: "", element: <LoginPage /> }],
+    children: [{ path: "", element: <HomePage /> }],
   },
 ]);
 function App() {
