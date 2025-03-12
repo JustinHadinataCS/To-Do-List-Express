@@ -4,32 +4,51 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash, Edit, Check, X } from "lucide-react";
-
+import { doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../config/firebase";
 function Item({ item, items, setItems }) {
   const [isEdit, setIsEdit] = useState(false);
   const [updatedName, setUpdatedName] = useState("");
 
-  const handleDelete = () => {
-    setItems(items.filter((i) => i.id !== item.id));
-  };
-
-  const handleEdit = (e) => {
-    e.preventDefault();
-    if (updatedName.trim()) {
-      setItems(
-        items.map((i) => (i.id === item.id ? { ...i, name: updatedName } : i))
-      );
-      setUpdatedName("");
-      setIsEdit(false);
+  const handleDelete = async () => {
+    try {
+      await deleteDoc(doc(db, "todos", item.id));
+      setItems(items.filter((i) => i.id !== item.id));
+    } catch (error) {
+      console.error("Error deleting document: ", error);
     }
   };
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    if (updatedName.trim()) {
+      try {
+        await updateDoc(doc(db, "todos", item.id), {
+          name: updatedName,
+        });
 
-  const handleToggleDone = () => {
-    setItems(
-      items.map((i) => (i.id === item.id ? { ...i, isDone: !i.isDone } : i))
-    );
+        setItems(
+          items.map((i) => (i.id === item.id ? { ...i, name: updatedName } : i))
+        );
+        setUpdatedName("");
+        setIsEdit(false);
+      } catch (error) {
+        console.error("Error updating document: ", error);
+      }
+    }
   };
+  const handleToggleDone = async () => {
+    try {
+      await updateDoc(doc(db, "todos", item.id), {
+        isDone: !item.isDone,
+      });
 
+      setItems(
+        items.map((i) => (i.id === item.id ? { ...i, isDone: !i.isDone } : i))
+      );
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
+  };
   const cancelEdit = () => {
     setIsEdit(false);
     setUpdatedName("");
