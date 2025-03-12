@@ -43,7 +43,7 @@ const LoginPage = () => {
     }
   }
 
-  async function handleGoogleSignUp() {
+  async function handleGoogleSignIn() {
     setLoading(true);
     try {
       setTimeout(() => {
@@ -51,6 +51,13 @@ const LoginPage = () => {
         console.log("Signed up with Google");
       }, 1000);
       await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  async function logout() {
+    try {
+      await signOut(auth);
     } catch (err) {
       console.error(err);
     }

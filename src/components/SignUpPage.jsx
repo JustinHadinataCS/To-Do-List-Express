@@ -190,17 +190,19 @@ const SignUpPage = () => {
               </div>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-center">
-            <p className="text-sm text-gray-500">
+          <CardFooter className="flex justify-center flex-col">
+            <p className="text-sm text-gray-500 flex gap-x-1">
               Already have an account?
               <Button variant="link" className="p-0 h-auto" type="button">
                 Sign in
               </Button>
             </p>
+            <Button variant="link" className="p-0 h-auto" type="button">
+              Logout
+            </Button>
           </CardFooter>
         </Card>
       </div>
-      <button onClick={logout}>Logout</button>
     </div>
   );
 };

@@ -5,10 +5,20 @@ import { Button } from "./components/ui/button";
 import AuthPage from "./components/LogInPage";
 import SignUpPage from "./components/SignUpPage";
 import Simple from "./components/Simple";
+import LoginPage from "./components/LoginPage";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AppLayout from "./components/AppLayout";
 
+const router = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    errorElement: <p>Error</p>,
+    children: [{ path: "", element: <LoginPage /> }],
+  },
+]);
 function App() {
   return (
-    <SignUpPage />
+    <RouterProvider router={router} />
     // <div className="p-10">
     //   <Button className="shadow-md">Hello</Button>
     // </div>
