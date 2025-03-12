@@ -23,7 +23,7 @@ function AuthProvider({ children }) {
 
     return () => unsubscribe;
   }, []);
-  async function handleEmailSignIn(e) {
+  async function handleEmailSignIn({ e, navigateTo }) {
     e.preventDefault();
     setError("");
     setLoading(true);
