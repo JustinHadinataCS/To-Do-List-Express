@@ -12,41 +12,54 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { auth } from "../config/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, googleProvider } from "../config/firebase";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleEmailSignIn() {
-    await createUserWithEmailAndPassword(auth, email, password);
-    await setEmail("");
-    await setPassword("");
+  async function handleEmailSignIn(e) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      if (!email || !password) {
+        throw new Error("Please fill in all fields");
+      }
+
+      await signInWithEmailAndPassword(auth, email, password);
+      console.log("Logged in successfully");
+    } catch (err) {
+      console.error("Logged in error:", err);
+      setError(err.message || "Failed to log in. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
-  const handleGoogleSignIn = () => {
+  async function handleGoogleSignUp() {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      console.log("Signed in with Google");
-    }, 1000);
-  };
-
-  const handleGoBack = () => {
-    console.log("Going back");
-  };
-
+    try {
+      setTimeout(() => {
+        setLoading(false);
+        console.log("Signed up with Google");
+      }, 1000);
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error(err);
+    }
+  }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md">
         <div className="mb-4">
-          <Button
-            variant="ghost"
-            className="flex items-center text-gray-500"
-            onClick={handleGoBack}
-          >
+          <Button variant="ghost" className="flex items-center text-gray-500">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Go back
           </Button>
