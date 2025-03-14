@@ -110,8 +110,10 @@ This will launch the development server. Open [**http://localhost:3000**](http:/
 Below is an image overview of the project to give you a quick glance at how it looks and functions:
 
 
-
-*(Replace **`Overview1.png`** with the actual path to your image file.)*
+<img width="960" alt="image" src="Overview1.png">
+<img width="960" alt="image" src="Overview2.png">
+<img width="960" alt="image" src="Overview3.png">
+<img width="960" alt="image" src="Overview4.png">
 
 ---
 
