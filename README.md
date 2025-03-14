@@ -39,7 +39,7 @@ To use Firebase services, you need to **create a configuration file** with your 
 
 ### **4️⃣ Set Up the Firebase Configuration File**
 
-Create a new folder inside `src/` called **`config/`**, then create a file named **`firebase.js`** inside it:
+Create a new folder inside `src/` called ``, then create a file named `` inside it:
 
 📁 **Project Structure:**
 
@@ -56,7 +56,7 @@ Firebase-Todolist/
 ├── README.md
 ```
 
-### **5️⃣ Add Firebase Config to `firebase.js`**
+### **5️⃣ Add Firebase Config to **``
 
 Paste your Firebase credentials inside `src/config/firebase.js`:
 
@@ -90,7 +90,7 @@ export const db = getFirestore(app);
 Once everything is set up, start the project using:
 
 ```sh
-npm start
+npm run dev
 ```
 
 This will launch the development server. Open [**http://localhost:3000**](http://localhost:3000) in your browser to see the app.
@@ -99,9 +99,19 @@ This will launch the development server. Open [**http://localhost:3000**](http:/
 
 ## 🌟 Features
 
-✅ Google Authentication with Firebase Auth  
-✅ Firestore Database for storing todos  
-✅ User-friendly interface  
+✅ Google Authentication with Firebase Auth\
+✅ Firestore Database for storing todos\
+✅ User-friendly interface
+
+---
+
+## 🖼 Image Overview
+
+Below is an image overview of the project to give you a quick glance at how it looks and functions:
+
+
+
+*(Replace **`path_to_your_screenshot.png`** with the actual path to your image file.)*
 
 ---
 
@@ -125,9 +135,10 @@ Still need help? Feel free to open an issue in the GitHub repository!
 
 ---
 
-Additional Resources: https://www.youtube.com/watch?v=2hR-uWjBAgw&t
+Additional Resources: [https://www.youtube.com/watch?v=2hR-uWjBAgw&t](https://www.youtube.com/watch?v=2hR-uWjBAgw\&t)
 
 ---
 
-
 🚀 **Happy Coding!** 🎉
+
+
