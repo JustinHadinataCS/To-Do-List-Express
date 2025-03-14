@@ -111,7 +111,7 @@ Below is an image overview of the project to give you a quick glance at how it l
 
 
 
-*(Replace **`path_to_your_screenshot.png`** with the actual path to your image file.)*
+*(Replace **`Overview1.png`** with the actual path to your image file.)*
 
 ---
 
