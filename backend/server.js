@@ -12,6 +12,9 @@ app.get("/", (req, res) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 
+const todoRoutes = require("./routes/todos");
+app.use("/todos", todoRoutes);
+
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
