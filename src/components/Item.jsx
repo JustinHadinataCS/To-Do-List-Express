@@ -4,66 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash, Edit, Check, X } from "lucide-react";
-import { doc, updateDoc, deleteDoc } from "firebase/firestore";
-import { db } from "../config/firebase";
-function Item({ item, items, setItems }) {
+function Item({ item }) {
   const [isEdit, setIsEdit] = useState(false);
   const [updatedName, setUpdatedName] = useState("");
-
-  const handleDelete = async () => {
-    try {
-      await deleteDoc(doc(db, "todos", item.id));
-      setItems(items.filter((i) => i.id !== item.id));
-    } catch (error) {
-      console.error("Error deleting document: ", error);
-    }
-  };
-  const handleEdit = async (e) => {
-    e.preventDefault();
-    if (updatedName.trim()) {
-      try {
-        await updateDoc(doc(db, "todos", item.id), {
-          name: updatedName,
-        });
-
-        setItems(
-          items.map((i) => (i.id === item.id ? { ...i, name: updatedName } : i))
-        );
-        setUpdatedName("");
-        setIsEdit(false);
-      } catch (error) {
-        console.error("Error updating document: ", error);
-      }
-    }
-  };
-  const handleToggleDone = async () => {
-    try {
-      await updateDoc(doc(db, "todos", item.id), {
-        isDone: !item.isDone,
-      });
-
-      setItems(
-        items.map((i) => (i.id === item.id ? { ...i, isDone: !i.isDone } : i))
-      );
-    } catch (error) {
-      console.error("Error updating document: ", error);
-    }
-  };
-  const cancelEdit = () => {
-    setIsEdit(false);
-    setUpdatedName("");
-  };
 
   return (
     <Card className="h-full">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Checkbox
-              checked={item.isDone}
-              onCheckedChange={handleToggleDone}
-              id={`task-${item.id}`}
-            />
+            <Checkbox checked={item.isDone} id={`task-${item.id}`} />
             <label
               htmlFor={`task-${item.id}`}
               className={`font-medium ${
@@ -76,7 +26,6 @@ function Item({ item, items, setItems }) {
           <Button
             variant="ghost"
             size="icon"
-            onClick={handleDelete}
             className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
           >
             <Trash className="h-4 w-4" />
@@ -104,10 +53,7 @@ function Item({ item, items, setItems }) {
         </div>
 
         {isEdit && (
-          <form
-            onSubmit={handleEdit}
-            className="mt-3 p-3 bg-gray-50 rounded border border-gray-200"
-          >
+          <form className="mt-3 p-3 bg-gray-50 rounded border border-gray-200">
             <p className="text-sm font-medium mb-2">Edit task:</p>
             <div className="flex gap-2">
               <Input
@@ -125,12 +71,7 @@ function Item({ item, items, setItems }) {
                 >
                   <Check className="h-4 w-4" />
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={cancelEdit}
-                >
+                <Button type="button" variant="outline" size="sm">
                   <X className="h-4 w-4" />
                 </Button>
               </div>

@@ -9,30 +9,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AlertCircle, ArrowLeft } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useAuth } from "@/context/AuthContext";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const LoginPage = () => {
-  const {
-    email,
-    password,
-    error,
-    loading,
-    setEmail,
-    handleGoogleSignIn,
-    handleEmailSignIn,
-    setPassword,
-    logout,
-  } = useAuth();
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md">
         <div className="mb-4">
           <Link to="/">
-            {" "}
             <Button variant="ghost" className="flex items-center text-gray-500">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Go back
@@ -49,12 +34,7 @@ const LoginPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button
-              variant="outline"
-              className="w-full justify-center"
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-            >
+            <Button variant="outline" className="w-full justify-center">
               <svg
                 className="mr-2 h-4 w-4"
                 xmlns="http://www.w3.org/2000/svg"
@@ -88,15 +68,15 @@ const LoginPage = () => {
                 OR
               </div>
             </div>
-
+            {/* 
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
-            )}
+            )} */}
 
-            <form onSubmit={handleEmailSignIn}>
+            <form>
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="email">Email</Label>
@@ -104,8 +84,6 @@ const LoginPage = () => {
                     id="email"
                     type="email"
                     placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
@@ -120,13 +98,11 @@ const LoginPage = () => {
                     id="password"
                     type="password"
                     placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign in with Email"}
+                <Button type="submit" className="w-full">
+                  Sign in with Email
                 </Button>
               </div>
             </form>
@@ -141,12 +117,7 @@ const LoginPage = () => {
               </Link>
             </p>
             <Link to="/">
-              <Button
-                variant="link"
-                className="p-0 h-auto"
-                type="button"
-                onClick={logout}
-              >
+              <Button variant="link" className="p-0 h-auto" type="button">
                 Logout
               </Button>
             </Link>

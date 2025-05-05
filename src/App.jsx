@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
 import HomePage from "./components/HomePage";
 import TodolistPage from "./components/TodolistPage";
-import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -16,11 +15,7 @@ const router = createBrowserRouter([
       { path: "/signup", element: <SignUpPage /> },
       {
         path: "/todo",
-        element: (
-          <ProtectedRoute>
-            <TodolistPage />
-          </ProtectedRoute>
-        ),
+        element: <TodolistPage />,
       },
     ],
   },

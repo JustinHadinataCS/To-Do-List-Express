@@ -1,14 +1,9 @@
 import { useState } from "react";
-import { auth } from "../config/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 
 function Simple() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  async function handleEmailSignUp() {
-    console.log("Sign-up button clicked!");
-    await createUserWithEmailAndPassword(auth, email, password);
-  }
+
   return (
     <div>
       <input
@@ -24,9 +19,7 @@ function Simple() {
         type="password"
         placeholder="hello123..."
       />
-      <button onClick={handleEmailSignUp} className="bg-black text-white">
-        Sign in
-      </button>
+      <button className="bg-black text-white">Sign in</button>
     </div>
   );
 }
