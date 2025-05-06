@@ -6,7 +6,7 @@ import LoginPage from "./pages/LoginPage";
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />, // will contain <Outlet />
+    element: <AppLayout />,
     errorElement: <p>Error</p>,
     children: [
       {
