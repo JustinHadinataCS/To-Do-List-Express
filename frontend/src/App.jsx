@@ -1,9 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
-import TodolistPage from "./components/TodolistPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import TodolistPage from "./components/TodolistPage";
+import Homepage from "./pages/Homepage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
             <TodolistPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "/",
+        element: <Homepage />,
       },
     ],
   },
