@@ -1,124 +1,95 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Trash, RefreshCw } from "lucide-react";
-import Item from "./Item";
-import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-
-const BASE_URL = "http://localhost:3000/todos";
+import { useEffect, useState } from "react";
+import TodoItem from "./TodoItem";
 
 function TodolistPage() {
-  const [items, setItems] = useState([]);
-  const [name, setName] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [title, setTitle] = useState("");
 
-  // Get all todos
+  const token = localStorage.getItem("token");
+
   const fetchTodos = async () => {
-    try {
-      const res = await axios.get(BASE_URL);
-      const formatted = res.data.map((todo) => ({
-        id: todo.id,
-        name: todo.title,
-        isDone: todo.completed,
-      }));
-      setItems(formatted);
-    } catch (err) {
-      console.error("Failed to fetch todos:", err);
-    }
+    const res = await fetch("http://localhost:5000/api/todos", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    setTodos(data);
+  };
+
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    if (!title.trim()) return;
+
+    const res = await fetch("http://localhost:5000/api/todos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ title }),
+    });
+
+    const newTodo = await res.json();
+    setTodos([...todos, newTodo]);
+    setTitle("");
+  };
+
+  const handleToggle = async (id) => {
+    await fetch(`http://localhost:5000/api/todos/${id}/toggle`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const handleDelete = async (id) => {
+    await fetch(`http://localhost:5000/api/todos/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   useEffect(() => {
     fetchTodos();
   }, []);
 
-  // Add new todo
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    if (!name.trim()) return;
-
-    try {
-      const res = await axios.post(BASE_URL, { title: name });
-      setItems((prev) => [
-        ...prev,
-        { id: res.data.id, name: res.data.title, isDone: res.data.completed },
-      ]);
-      setName("");
-    } catch (err) {
-      console.error("Failed to add todo:", err);
-    }
-  };
-
-  // Delete all
-  const handleDeleteAll = async () => {
-    for (let item of items) {
-      await axios.delete(`${BASE_URL}/${item.id}`);
-    }
-    setItems([]);
-  };
-
-  // Reset all (mark all as not done)
-  const handleResetAll = async () => {
-    const updated = await Promise.all(
-      items.map(async (item) => {
-        const res = await axios.put(`${BASE_URL}/${item.id}`, {
-          completed: false,
-        });
-        return {
-          ...item,
-          isDone: res.data.completed,
-        };
-      })
-    );
-    setItems(updated);
-  };
-
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <Link to="/">
-        <Button variant="ghost" className="flex items-center text-gray-500">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Go back
-        </Button>
-      </Link>
+    <div className="max-w-xl mx-auto space-y-6">
+      <form onSubmit={handleAdd} className="flex space-x-2">
+        <input
+          type="text"
+          placeholder="What do you need to do?"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="flex-grow p-2 border rounded"
+        />
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Add
+        </button>
+      </form>
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-4">Taskmaster</h1>
-        <p className="text-gray-600 mb-4">Justin Hadinata - 2702298236</p>
-
-        <form className="flex gap-2 mb-4" onSubmit={handleAdd}>
-          <Input
-            type="text"
-            placeholder="Add new task..."
-            className="flex-grow"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-          />
-          <Button type="submit">Add Task</Button>
-        </form>
-
-        <div className="flex gap-2 mb-6">
-          <Button
-            variant="destructive"
-            className="flex items-center gap-1"
-            onClick={handleDeleteAll}
-          >
-            <Trash className="w-4 h-4" /> Delete All
-          </Button>
-          <Button
-            variant="outline"
-            className="flex items-center gap-1"
-            onClick={handleResetAll}
-          >
-            <RefreshCw className="w-4 h-4" /> Reset All
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {items.map((item) => (
-          <Item key={item.id} item={item} setItems={setItems} items={items} />
-        ))}
+      <div className="space-y-3">
+        {todos.length === 0 ? (
+          <p className="text-gray-500 text-center">No todos yet.</p>
+        ) : (
+          todos.map((todo) => (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              onToggle={handleToggle}
+              onDelete={handleDelete}
+            />
+          ))
+        )}
       </div>
     </div>
   );

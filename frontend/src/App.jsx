@@ -3,6 +3,7 @@ import AppLayout from "./components/AppLayout";
 import TodolistPage from "./components/TodolistPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/todos",
-        element: <TodolistPage />,
+        element: (
+          <ProtectedRoute>
+            <TodolistPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
