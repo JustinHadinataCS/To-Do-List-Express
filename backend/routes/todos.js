@@ -1,140 +1,79 @@
 const express = require("express");
 const router = express.Router();
 const { Todo } = require("../models");
+const authenticateToken = require("../middleware/auth");
 
 /**
- * @swagger
- * components:
- *   schemas:
- *     Todo:
- *       type: object
- *       required:
- *         - title
- *       properties:
- *         id:
- *           type: integer
- *         title:
- *           type: string
- *         completed:
- *           type: boolean
- *       example:
- *         id: 1
- *         title: "Buy groceries"
- *         completed: false
+ * GET /todos - Get all todos for the logged-in user
  */
-
-/**
- * @swagger
- * /todos:
- *   get:
- *     summary: Get all todos
- *     tags: [Todos]
- *     responses:
- *       200:
- *         description: List of todos
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Todo'
- */
-router.get("/", async (req, res) => {
-  const todos = await Todo.findAll();
-  res.json(todos);
+router.get("/", authenticateToken, async (req, res) => {
+  try {
+    const todos = await Todo.findAll({
+      where: { userId: req.user.userId },
+    });
+    res.json(todos);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 /**
- * @swagger
- * /todos:
- *   post:
- *     summary: Create a new todo
- *     tags: [Todos]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - title
- *             properties:
- *               title:
- *                 type: string
- *     responses:
- *       201:
- *         description: The created todo
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Todo'
+ * POST /todos - Create a new todo for the logged-in user
  */
-router.post("/", async (req, res) => {
-  const { title } = req.body;
-  const newTodo = await Todo.create({ title, completed: false });
-  res.status(201).json(newTodo);
+router.post("/", authenticateToken, async (req, res) => {
+  try {
+    const { title } = req.body;
+    const newTodo = await Todo.create({
+      title,
+      completed: false,
+      userId: req.user.userId,
+    });
+    res.status(201).json(newTodo);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 /**
- * @swagger
- * /todos/{id}:
- *   put:
- *     summary: Update a todo
- *     tags: [Todos]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               completed:
- *                 type: boolean
- *     responses:
- *       200:
- *         description: The updated todo
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Todo'
+ * PUT /todos/:id - Update a todo (if it belongs to the user)
  */
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const [_, [updatedTodo]] = await Todo.update(req.body, {
-    where: { id },
-    returning: true,
-  });
-  res.json(updatedTodo);
+  const { title, completed } = req.body;
+
+  try {
+    const [_, [updatedTodo]] = await Todo.update(
+      { title, completed },
+      {
+        where: { id, userId: req.user.userId },
+        returning: true,
+      }
+    );
+
+    if (!updatedTodo)
+      return res.status(404).json({ message: "Todo not found" });
+    res.json(updatedTodo);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 /**
- * @swagger
- * /todos/{id}:
- *   delete:
- *     summary: Delete a todo
- *     tags: [Todos]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       204:
- *         description: Todo deleted
+ * DELETE /todos/:id - Delete a todo (if it belongs to the user)
  */
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  await Todo.destroy({ where: { id } });
-  res.status(204).send();
+
+  try {
+    const deleted = await Todo.destroy({
+      where: { id, userId: req.user.userId },
+    });
+
+    if (!deleted) return res.status(404).json({ message: "Todo not found" });
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 module.exports = router;
